@@ -4,6 +4,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import '../styles/Table.module.css'
 import { useMemo, useState } from "react"
+import EditableHeader from "./EditableHeader"
+import EditableInput from "./EditableInput"
+import CustomHeader from "./CustomHeader"
 
 export default function Table() {
   const containerStyle = useMemo(() => ({ width: '100vh', height: '100vw' }), []);
@@ -33,6 +36,24 @@ export default function Table() {
     },
   ])
 
+  const components = useMemo(() => {
+    return {
+      agColumnHeader: CustomHeader,
+    };
+  }, []);
+
+  const defaultColDef = useMemo(() => {
+    return {
+      editable: true,
+      cellStyle: {border: 'solid', borderColor: '#F0F0F0', borderRightWidth: '1px', borderLeftWidth: '1px', borderTopWidth: '1px', borderBottomWidth: '0px'},
+      resizable: true,
+      // headerComponent: "EditableHeader",
+      // sortable: true,
+      components: components,
+      suppressSizeToFit: false,
+    }
+  }, [])
+
 
   // const [rowData, setRowData] = useState([
   //   Array.from({length: 100}, () => ({make: "", model: "", price: ""}))
@@ -42,15 +63,12 @@ export default function Table() {
   
   const gridOptions = {
     columnDefs: columnDefs,
-    defaultColDef: {
-      editable: true,
-      cellStyle: {border: 'solid', borderColor: '#F0F0F0', borderRightWidth: '1px', borderLeftWidth: '1px', borderTopWidth: '1px', borderBottomWidth: '0px'},
-      resizable: true,
-      // sortable: true,
-      suppressSizeToFit: false,
-    },
+    defaultColDef: defaultColDef,
     rowData: rowData,
     singleClickEdit: true,
+    headerValueEdit: {
+      enableHeaderValueEdit: true
+    },
     onCellValueChanged: (params) => {
       console.log(params.data)
     },
