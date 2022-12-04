@@ -9,8 +9,8 @@ import { CustomHeader } from "./CustomHeader"
 import { SetLeftFeature } from "ag-grid-community"
 
 export default function Table() {
-  const containerStyle = useMemo(() => ({ width: '100vh', height: '100vw' }), [])
-  const gridStyle = useMemo(() => ({ height: '100vh', width: '100vw' }), [])
+  // const containerStyle = useMemo(() => ({ width: '100vw', height: '100vh' }), [])
+  const gridStyle = useMemo(() => ({ height: '90vh', width: '100vw' }), [])
 
   const [editingHeaderId, setEditingHeaderId] = useState(null)
 
@@ -77,7 +77,7 @@ export default function Table() {
   }
 
   return (
-    <div style={containerStyle}>
+    <div >
       <div style={gridStyle} className="ag-theme-alpine">
         <GridContext.Provider value={{editingHeaderId, unfocusColumn}}>
         <button onClick={() => unfocusColumn('c1')}>rename c1</button>
