@@ -8,20 +8,32 @@ export const CustomHeader = (props) => {
     setValue(event.target.value);
   }
 
-  const handleKeyPress = (event, unfocusColumn) => {
+  const handleKeyPress = (event, toggleHeaderFocus, setColumnDefs) => {
     if (event.key == 'Enter') {
-      props.column.getColDef().headerName = value
-      // props.column.getColDef().colId = value
+      let cols = props.api.getColumnDefs();
+      let currentColumnId = props.column.getColId();
+      let newCols = [];
 
-      props.api.refreshHeader()
-      unfocusColumn();
-      console.log(props.column.getColDef())
+      cols.forEach((colDef) => {
+        if (colDef.colId == currentColumnId) {
+          newCols.push({ ...colDef, headerName: value });
+        } else {
+          newCols.push({ ...colDef });
+        }
+      });
+
+      setColumnDefs(newCols)
+      props.api.setColumnDefs(newCols)
+      toggleHeaderFocus();
+      // Refreshes header but only changes one column header
+      // props.column.getColDef().headerName = value
+      // props.api.refreshHeader()
     }
   }
 
   return (
     <GridContext.Consumer>
-      { ({ editingHeaderId, unfocusColumn }) => {
+      { ({ editingHeaderId, toggleHeaderFocus, setColumnDefs }) => {
         let column = null;
         if (editingHeaderId === props.column.getColId()) {
           column = (
@@ -29,7 +41,7 @@ export const CustomHeader = (props) => {
               type="text"
               value={value}
               onChange={handleChange}
-              onKeyDown={(e) => handleKeyPress(e, unfocusColumn)}
+              onKeyDown={(e) => handleKeyPress(e, toggleHeaderFocus, setColumnDefs)}
             />
           )
         } else {

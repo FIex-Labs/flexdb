@@ -1,0 +1,12 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 10%;
+  grid-gap: 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.navBar {
+  display: flex;
+}
