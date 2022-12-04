@@ -11,11 +11,11 @@ export const CustomHeader = (props) => {
   const handleKeyPress = (event, unfocusColumn) => {
     if (event.key == 'Enter') {
       props.column.getColDef().headerName = value
-      props.column.getColDef().id = value
-      props.column.getColDef().key = value
+      // props.column.getColDef().colId = value
 
       props.api.refreshHeader()
       unfocusColumn();
+      console.log(props.column.getColDef())
     }
   }
 

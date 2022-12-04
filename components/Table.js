@@ -6,6 +6,7 @@ import '../styles/Table.module.css'
 import { useMemo, useState } from "react"
 import { GridContext } from './GridContext'
 import { CustomHeader } from "./CustomHeader"
+import { SetLeftFeature } from "ag-grid-community"
 
 export default function Table() {
   const containerStyle = useMemo(() => ({ width: '100vh', height: '100vw' }), [])
@@ -27,6 +28,7 @@ export default function Table() {
       editable: false,
       sortable: false,
       resizable: false,
+      pinned: 'left',
       suppressSizeToFit: true,
       width: 70
     },
@@ -83,6 +85,7 @@ export default function Table() {
         <button onClick={() => unfocusColumn('c3')}>rename c3</button>
           <AgGridReact
             gridOptions={gridOptions}
+          
           />
         </GridContext.Provider>
       </div>
