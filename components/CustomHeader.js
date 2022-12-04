@@ -1,81 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react'
+import { GridContext } from './GridContext'
 
-export default function CustomHeader(props) {
-  const [ascSort, setAscSort] = useState('inactive');
-  const [descSort, setDescSort] = useState('inactive');
-  const [noSort, setNoSort] = useState('inactive');
-  const refButton = useRef(null);
+export const CustomHeader = (props) => {
+  const [value, setValue] = useState(props.displayName)
 
-  const onMenuClicked = () => {
-    props.showColumnMenu(refButton.current);
-  };
-
-  const onSortChanged = () => {
-    setAscSort(props.column.isSortAscending() ? 'active' : 'inactive');
-    setDescSort(props.column.isSortDescending() ? 'active' : 'inactive');
-    setNoSort(
-      !props.column.isSortAscending() && !props.column.isSortDescending()
-        ? 'active'
-        : 'inactive'
-    );
-  };
-
-  const onSortRequested = (order, event) => {
-    props.setSort(order, event.shiftKey);
-  };
-
-  useEffect(() => {
-    props.column.addEventListener('sortChanged', onSortChanged);
-    onSortChanged();
-  }, []);
-
-  let menu = null;
-  if (props.enableMenu) {
-    menu = (
-      <div
-        ref={refButton}
-        className="customHeaderMenuButton"
-        onClick={() => onMenuClicked()}
-      >
-        <i className={`fa ${props.menuIcon}`}></i>
-      </div>
-    );
+  const handleChange = (event) => {
+    setValue(event.target.value);
   }
 
-  let sort = null;
-  if (props.enableSorting) {
-    sort = (
-      <div style={{ display: 'inline-block' }}>
-        <div
-          onClick={(event) => onSortRequested('asc', event)}
-          onTouchEnd={(event) => onSortRequested('asc', event)}
-          className={`customSortDownLabel ${ascSort}`}
-        >
-          <i class="fa fa-long-arrow-alt-down"></i>
-        </div>
-        <div
-          onClick={(event) => onSortRequested('desc', event)}
-          onTouchEnd={(event) => onSortRequested('desc', event)}
-          className={`customSortUpLabel ${descSort}`}
-        >
-          <i class="fa fa-long-arrow-alt-up"></i>
-        </div>
-        <div
-          onClick={(event) => onSortRequested('', event)}
-          onTouchEnd={(event) => onSortRequested('', event)}
-          className={`customSortRemoveLabel ${noSort}`}
-        >
-          <i class="fa fa-times"></i>
-        </div>
-      </div>
-    );
+  const handleKeyPress = (event, unfocusColumn) => {
+    if (event.key == 'Enter') {
+      props.column.getColDef().headerName = value
+      props.column.getColDef().id = value
+      props.column.getColDef().key = value
+
+      props.api.refreshHeader()
+      unfocusColumn();
+    }
   }
 
   return (
-    <div>
-      {menu}
-      <div className="customHeaderLabel">{props.displayName}</div>
-      {sort}
-    </div>
-  );
-};
+    <GridContext.Consumer>
+      { ({ editingHeaderId, unfocusColumn }) => {
+        let column = null;
+        if (editingHeaderId === props.column.getColId()) {
+          column = (
+            <input
+              type="text"
+              value={value}
+              onChange={handleChange}
+              onKeyDown={(e) => handleKeyPress(e, unfocusColumn)}
+            />
+          )
+        } else {
+          column = <div className="customHeaderLabel">{props.displayName}</div>;
+        }
+        return column
+      }}
+    </GridContext.Consumer>
+  )
+}
