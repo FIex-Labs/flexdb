@@ -1,0 +1,5 @@
+.editor {
+  position: fixed;
+  z-index: 999;
+  background-color: gray;
+}

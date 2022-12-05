@@ -11,18 +11,18 @@ import { SchemaEditor } from "./SchemaEditor"
 import { GptInput } from "./GptInput"
 
 export default function Table() {
-  // const containerStyle = useMemo(() => ({ width: '100vw', height: '100vh' }), [])
   const gridStyle = useMemo(() => ({ height: '90vh', width: '100vw' }), [])
 
   const [editingHeaderId, setEditingHeaderId] = useState(null)
+
+
 
   const toggleHeaderFocus = (colId = null) => {
     setEditingHeaderId(colId);
   }
 
   const emptyRows = Array.from({length: 100}, () => ({}))
-  // const [rowData, setRowData] = useState(emptyRows)
-  const rowData = emptyRows
+  const [rowData, setRowData] = useState(emptyRows)
 
   const [columnDefs, setColumnDefs] = useState([
     {
