@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@agjs/react-right-click-menu@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@agjs/react-right-click-menu/-/react-right-click-menu-0.0.8.tgz#740e27f72027f164e62e5befdc31496b68995e66"
+  integrity sha512-6TJ6G5Mihow4tGkHHpfVHp7KXMZYhkGCqMl/k9o4OdB1AvjVE7jWpremQU0gslU3t2xkmhqh/Wpi6BGT6jqu+A==
+
 "@babel/runtime-corejs3@^7.10.2":
   version "7.20.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.20.6.tgz#63dae945963539ab0ad578efbf3eff271e7067ae"

@@ -4,6 +4,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import gridStyles from '../styles/Table.module.css'
 import navBarStyles from '../styles/NavBar.module.css'
+import schemaEditorStyles from '../styles/SchemaEditor.module.css'
+import gptInputStyles from '../styles/GptInput.module.css'
+
 import { useMemo, useState } from "react"
 import { GridContext } from './GridContext'
 import { CustomHeader } from "./CustomHeader"
@@ -11,6 +14,7 @@ import { SchemaEditor } from "./SchemaEditor"
 import { GptInput } from "./GptInput"
 
 export default function Table() {
+
   const gridStyle = useMemo(() => ({ height: '90vh', width: '100vw' }), [])
 
   const [editingHeaderId, setEditingHeaderId] = useState(null)
@@ -85,20 +89,27 @@ export default function Table() {
       <GridContext.Provider value={{editingHeaderId, toggleHeaderFocus, setColumnDefs}}>
         <div className={navBarStyles.navBar}>
           <SchemaEditor>
-            {columnDefs.map((colDef) => {
-              if (colDef.field === 'row_id') {
-                return null
-              }
-              return (
-                <div key={colDef.field} className={navBarStyles.header}>
-                  <div>{colDef.headerName}</div>
-                  <button onClick={() => toggleHeaderFocus(colDef.field)}>rename {colDef.headerName}</button>
-                </div>
-              )
-            })}
-            <button>Add Column</button>
+            <div className={schemaEditorStyles.menu}>
+              {columnDefs.map((colDef) => {
+                if (colDef.field === 'row_id') {
+                  return null
+                }
+                return (
+                  <div key={colDef.field} className={navBarStyles.header}>
+                    <div>{colDef.headerName}</div>
+                    <button onClick={() => toggleHeaderFocus(colDef.field)}>rename {colDef.headerName}</button>
+                  </div>
+                )
+              })}
+              <button>Add Column</button>
+            </div>
           </SchemaEditor>
-          <GptInput></GptInput>
+          <GptInput>
+            <div className={gptInputStyles.menu}>
+              <input type="text" placeholder="Enter your query" />
+              <button>Submit</button>
+            </div>
+          </GptInput>
         </div>
         <AgGridReact
           gridOptions={gridOptions}

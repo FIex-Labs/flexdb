@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 
 export const GptInput = (props) => {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
-    <div>Gpt Input</div>
+    <div>
+      <button onClick={() => setIsOpen(!isOpen)}>GPT Input</button>
+      {isOpen && props.children}
+    </div>
   )
 }

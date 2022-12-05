@@ -5,8 +5,8 @@ export const SchemaEditor = (props) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className={styles.editor}>
-      <button onClick={() => setIsOpen(!isOpen)}> Schema Editor </button>
+    <div>
+      <button onClick={() => setIsOpen(!isOpen)}>Schema Editor</button>
       {isOpen && props.children}
     </div>
   )

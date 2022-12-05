@@ -1,6 +1,6 @@
 .menu {
   z-index: 999;
-  padding: 10px;
-  position: fixed;
+  position: absolute;
   background-color: lightgray;
+  padding: 10px;
 }
