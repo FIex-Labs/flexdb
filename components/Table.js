@@ -91,6 +91,9 @@ export default function Table() {
   }
 
   const addColumn = () => {
+    if (newColText.length === 0) {
+      return
+    }
     let cols = columnDefs;
     let newCols = [...cols, { headerName: newColText, field: `c${cols.length + 1}` }]
     setColumnDefs(newCols)
