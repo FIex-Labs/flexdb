@@ -25,6 +25,7 @@ export default function Table() {
     setEditingHeaderId(colId);
   }
 
+  const [newColText, setNewColText] = useState("");
   const emptyRows = Array.from({length: 100}, () => ({}))
   const [rowData, setRowData] = useState(emptyRows)
 
@@ -91,8 +92,12 @@ export default function Table() {
 
   const addColumn = () => {
     let cols = columnDefs;
-    let newCols = [...cols, { headerName: "Blank", field: `c${cols.length + 1}` }]
+    let newCols = [...cols, { headerName: newColText, field: `c${cols.length + 1}` }]
     setColumnDefs(newCols)
+  }
+
+  const handleChange = (event) => {
+    setNewColText(event.target.value)
   }
 
   return (
@@ -101,6 +106,7 @@ export default function Table() {
         <div className={navBarStyles.navBar}>
           <SchemaEditor>
             <div className={schemaEditorStyles.menu}>
+              <input type="text" value={newColText} onChange={handleChange} />
               <button onClick={addColumn}>Add Column</button>
               <div>{columnDefs.length} Columns</div>
               {columnDefs.map((colDef) => {
@@ -110,7 +116,7 @@ export default function Table() {
                 return (
                   <div key={colDef.field} className={navBarStyles.header}>
                     <div>{colDef.headerName}</div>
-                    <button onClick={() => toggleHeaderFocus(colDef.field)}>Rename {colDef.headerName}</button>
+                    <button onClick={() => toggleHeaderFocus(colDef.field)}>Edit</button>
                   </div>
                 )
               })}
