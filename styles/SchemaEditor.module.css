@@ -3,4 +3,6 @@
   padding: 10px;
   position: fixed;
   background-color: lightgray;
+  max-height: 20vh;
+  overflow-y: scroll;
 }

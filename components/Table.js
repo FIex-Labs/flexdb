@@ -37,7 +37,7 @@ export default function Table() {
       sortable: false,
       resizable: false,
       pinned: 'left',
-      suppressSizeToFit: true,
+      // suppressSizeToFit: true,
       width: 70
     },
     {
@@ -60,7 +60,7 @@ export default function Table() {
       cellStyle: {border: 'solid', borderColor: '#F0F0F0', borderRightWidth: '1px', borderLeftWidth: '1px', borderTopWidth: '0px', borderBottomWidth: '0px'},
       resizable: true,
       // sortable: true,
-      suppressSizeToFit: false,
+      // suppressSizeToFit: false,
     }
   }, [])
 
@@ -71,17 +71,28 @@ export default function Table() {
   }, [])
   
   const gridOptions = {
-    columnDefs: columnDefs,
     defaultColDef: defaultColDef,
     rowData: rowData,
     singleClickEdit: true,
     components: components,
+    // maxWidth: 20,
+    width: 50,
+    
     onCellValueChanged: (params) => {
       // console.log(params.data)
     },
-    onFirstDataRendered: (params) => {
-      params.api.sizeColumnsToFit();
-    },
+    // onFirstDataRendered: (params) => {
+    //   params.api.sizeColumnsToFit();
+    // },
+    onGridColumnsChanged: (params) => {
+      // params.api.sizeColumnsToFit();
+    }
+  }
+
+  const addColumn = () => {
+    let cols = columnDefs;
+    let newCols = [...cols, { headerName: "Blank", field: `c${cols.length + 1}` }]
+    setColumnDefs(newCols)
   }
 
   return (
@@ -90,6 +101,8 @@ export default function Table() {
         <div className={navBarStyles.navBar}>
           <SchemaEditor>
             <div className={schemaEditorStyles.menu}>
+              <button onClick={addColumn}>Add Column</button>
+              <div>{columnDefs.length} Columns</div>
               {columnDefs.map((colDef) => {
                 if (colDef.field === 'row_id') {
                   return null
@@ -97,11 +110,10 @@ export default function Table() {
                 return (
                   <div key={colDef.field} className={navBarStyles.header}>
                     <div>{colDef.headerName}</div>
-                    <button onClick={() => toggleHeaderFocus(colDef.field)}>rename {colDef.headerName}</button>
+                    <button onClick={() => toggleHeaderFocus(colDef.field)}>Rename {colDef.headerName}</button>
                   </div>
                 )
               })}
-              <button>Add Column</button>
             </div>
           </SchemaEditor>
           <GptInput>
@@ -113,6 +125,8 @@ export default function Table() {
         </div>
         <AgGridReact
           gridOptions={gridOptions}
+          columnDefs={columnDefs}
+          colResizeDefault={'shift'}
         />
       </GridContext.Provider>
     </div>
