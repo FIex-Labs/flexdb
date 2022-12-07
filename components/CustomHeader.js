@@ -9,7 +9,7 @@ export const CustomHeader = (props) => {
   }
 
   const handleKeyPress = (event, toggleHeaderFocus, setColumnDefs) => {
-    if (event.key == 'Enter') {
+    if (event.key === 'Enter') {
       if (value.length === 0) {
         toggleHeaderFocus()
         return

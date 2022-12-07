@@ -7,22 +7,20 @@ import navBarStyles from '../styles/NavBar.module.css'
 import schemaEditorStyles from '../styles/SchemaEditor.module.css'
 import gptInputStyles from '../styles/GptInput.module.css'
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useRef } from "react"
 import { GridContext } from './GridContext'
 import { CustomHeader } from "./CustomHeader"
 import { SchemaEditor } from "./SchemaEditor"
 import { GptInput } from "./GptInput"
 
 export default function Table() {
-
   const gridStyle = useMemo(() => ({ height: '90vh', width: '100vw' }), [])
 
   const [editingHeaderId, setEditingHeaderId] = useState(null)
-
-
+  let colId = useRef(1)
 
   const toggleHeaderFocus = (colId = null) => {
-    setEditingHeaderId(colId);
+    setEditingHeaderId(colId)
   }
 
   const [newColText, setNewColText] = useState("");
@@ -43,15 +41,15 @@ export default function Table() {
     },
     {
       headerName: "Blank",
-      field: "c1",
+      field: "1",
     },
     {
       headerName: "Blank",
-      field: "c2",
+      field: "2",
     },
     {
       headerName: "Blank",
-      field: "c3",
+      field: "3",
     },
   ])
 
@@ -82,11 +80,12 @@ export default function Table() {
     onCellValueChanged: (params) => {
       // console.log(params.data)
     },
-    // onFirstDataRendered: (params) => {
-    //   params.api.sizeColumnsToFit();
-    // },
+    onFirstDataRendered: (params) => {
+      // params.api.sizeColumnsToFit()
+      colId.current = params.columnApi.getAllGridColumns().length - 1
+    },
     onGridColumnsChanged: (params) => {
-      // params.api.sizeColumnsToFit();
+      // params.api.sizeColumnsToFit()
     }
   }
 
@@ -94,8 +93,16 @@ export default function Table() {
     if (newColText.length === 0) {
       return
     }
+    colId.current += 1
     let cols = columnDefs;
-    let newCols = [...cols, { headerName: newColText, field: `c${cols.length + 1}` }]
+    let newCols = [...cols, { headerName: newColText, field: colId.current.toString() }]
+    setColumnDefs(newCols)
+    setNewColText("")
+  }
+
+  const deleteColumn = (colIdString) => {
+    let cols = columnDefs
+    let newCols = cols.filter((col) => col.field !== colIdString)
     setColumnDefs(newCols)
   }
 
@@ -103,15 +110,25 @@ export default function Table() {
     setNewColText(event.target.value)
   }
 
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      setIsOpen(false)
+    }
+  }
+
   return (
     <div style={gridStyle} className={`${gridStyles.agthemealpine} ag-theme-alpine`}>
       <GridContext.Provider value={{editingHeaderId, toggleHeaderFocus, setColumnDefs}}>
         <div className={navBarStyles.navBar}>
           <SchemaEditor>
-            <div className={schemaEditorStyles.menu}>
-              <input type="text" value={newColText} onChange={handleChange} />
+            <button onClick={() => setIsOpen(!isOpen)}>Schema Editor</button>
+            {isOpen && 
+            <div className={schemaEditorStyles.menu} onKeyDown={handleKeyDown}>
+              <input type="text" value={newColText} onChange={handleChange}/>
               <button onClick={addColumn}>Add Column</button>
-              <div>{columnDefs.length} Columns</div>
+              <div>{columnDefs.length - 1} Columns</div>
               {columnDefs.map((colDef) => {
                 if (colDef.field === 'row_id') {
                   return null
@@ -120,10 +137,12 @@ export default function Table() {
                   <div key={colDef.field} className={navBarStyles.header}>
                     <div>{colDef.headerName}</div>
                     <button onClick={() => toggleHeaderFocus(colDef.field)}>Edit</button>
+                    <button onClick={() => deleteColumn(colDef.field)}>Delete</button>
                   </div>
                 )
               })}
             </div>
+            }
           </SchemaEditor>
           <GptInput>
             <div className={gptInputStyles.menu}>
