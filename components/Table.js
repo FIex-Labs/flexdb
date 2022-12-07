@@ -12,6 +12,7 @@ import { GridContext } from './GridContext'
 import { CustomHeader } from "./CustomHeader"
 import { SchemaEditor } from "./SchemaEditor"
 import { GptInput } from "./GptInput"
+import SQLDataTypes from "./DatatypeDropdown"
 
 export default function Table() {
   const gridStyle = useMemo(() => ({ height: '90vh', width: '100vw' }), [])
@@ -149,6 +150,10 @@ export default function Table() {
                   <div key={colDef.field} className={schemaEditorStyles.columns}>
                     <div>{colDef.headerName}</div>
                     <div className={schemaEditorStyles.buttons}>
+                      <form>
+                        <label>Data type:</label>
+                        <SQLDataTypes />
+                      </form>
                       <button onClick={() => toggleHeaderFocus(colDef.field)}>Edit</button>
                       <button onClick={() => deleteColumn(colDef.field)}>Delete</button>
                     </div>
