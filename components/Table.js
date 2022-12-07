@@ -23,9 +23,11 @@ export default function Table() {
     setEditingHeaderId(colId)
   }
 
-  const [newColText, setNewColText] = useState("");
+  const [newColText, setNewColText] = useState("")
   const emptyRows = Array.from({length: 100}, () => ({}))
   const [rowData, setRowData] = useState(emptyRows)
+
+  const [queryText, setQueryText] = useState("")
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -106,8 +108,12 @@ export default function Table() {
     setColumnDefs(newCols)
   }
 
-  const handleChange = (event) => {
+  const handleNewColTextChange = (event) => {
     setNewColText(event.target.value)
+  }
+
+  const handleQueryTextChange = (event) => {
+    setQueryText(event.target.value)
   }
 
   const [isSchemaEditorOpen, setIsSchemaEditorOpen] = useState(false)
@@ -116,7 +122,12 @@ export default function Table() {
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       setIsSchemaEditorOpen(false)
+      setIsGptInputOpen(false)
     }
+  }
+
+  const queryGpt = (text) => {
+    console.log(text)
   }
 
   return (
@@ -127,7 +138,7 @@ export default function Table() {
             <button onClick={() => setIsSchemaEditorOpen(!isSchemaEditorOpen)} onKeyDown={handleKeyDown} className={schemaEditorStyles.button}>Schema Editor</button>
             {isSchemaEditorOpen && 
             <div className={schemaEditorStyles.menu} onKeyDown={handleKeyDown}>
-              <input type="text" value={newColText} onChange={handleChange} className={schemaEditorStyles.input}/>
+              <input type="text" value={newColText} onChange={handleNewColTextChange} className={schemaEditorStyles.input}/>
               <button onClick={addColumn} className={schemaEditorStyles.submitButton}>Add Column</button>
               <div>{columnDefs.length - 1} Columns</div>
               {columnDefs.map((colDef) => {
@@ -148,11 +159,11 @@ export default function Table() {
             }
           </SchemaEditor>
           <GptInput>
-            <button onClick={() => setIsGptInputOpen(!isGptInputOpen)} className={schemaEditorStyles.button}>GPT Input</button>
+            <button onClick={() => setIsGptInputOpen(!isGptInputOpen)} onKeyDown={handleKeyDown} className={schemaEditorStyles.button}>GPT Input</button>
             {isGptInputOpen &&
             <div className={gptInputStyles.menu}>
-              <input type="text" placeholder="Enter your query" />
-              <button>Submit</button>
+              <textarea type="text" value={queryText} onChange={handleQueryTextChange} placeholder="Enter query" className={gptInputStyles.textarea}/>
+              <button className={gptInputStyles.submitButton}>Submit</button>
             </div>
             } 
           </GptInput>
