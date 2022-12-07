@@ -110,11 +110,12 @@ export default function Table() {
     setNewColText(event.target.value)
   }
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isSchemaEditorOpen, setIsSchemaEditorOpen] = useState(false)
+  const [isGptInputOpen, setIsGptInputOpen] = useState(false)
 
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
-      setIsOpen(false)
+      setIsSchemaEditorOpen(false)
     }
   }
 
@@ -123,21 +124,23 @@ export default function Table() {
       <GridContext.Provider value={{editingHeaderId, toggleHeaderFocus, setColumnDefs}}>
         <div className={navBarStyles.navBar}>
           <SchemaEditor>
-            <button onClick={() => setIsOpen(!isOpen)}>Schema Editor</button>
-            {isOpen && 
+            <button onClick={() => setIsSchemaEditorOpen(!isSchemaEditorOpen)} onKeyDown={handleKeyDown} className={schemaEditorStyles.button}>Schema Editor</button>
+            {isSchemaEditorOpen && 
             <div className={schemaEditorStyles.menu} onKeyDown={handleKeyDown}>
-              <input type="text" value={newColText} onChange={handleChange}/>
-              <button onClick={addColumn}>Add Column</button>
+              <input type="text" value={newColText} onChange={handleChange} className={schemaEditorStyles.input}/>
+              <button onClick={addColumn} className={schemaEditorStyles.submitButton}>Add Column</button>
               <div>{columnDefs.length - 1} Columns</div>
               {columnDefs.map((colDef) => {
                 if (colDef.field === 'row_id') {
                   return null
                 }
                 return (
-                  <div key={colDef.field} className={navBarStyles.header}>
+                  <div key={colDef.field} className={schemaEditorStyles.columns}>
                     <div>{colDef.headerName}</div>
-                    <button onClick={() => toggleHeaderFocus(colDef.field)}>Edit</button>
-                    <button onClick={() => deleteColumn(colDef.field)}>Delete</button>
+                    <div className={schemaEditorStyles.buttons}>
+                      <button onClick={() => toggleHeaderFocus(colDef.field)}>Edit</button>
+                      <button onClick={() => deleteColumn(colDef.field)}>Delete</button>
+                    </div>
                   </div>
                 )
               })}
@@ -145,10 +148,13 @@ export default function Table() {
             }
           </SchemaEditor>
           <GptInput>
+            <button onClick={() => setIsGptInputOpen(!isGptInputOpen)} className={schemaEditorStyles.button}>GPT Input</button>
+            {isGptInputOpen &&
             <div className={gptInputStyles.menu}>
               <input type="text" placeholder="Enter your query" />
               <button>Submit</button>
             </div>
+            } 
           </GptInput>
         </div>
         <AgGridReact

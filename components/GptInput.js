@@ -6,8 +6,9 @@ export const GptInput = (props) => {
   return (
     
     <div>
-      <button onClick={() => setIsOpen(!isOpen)}>GPT Input</button>
-      {isOpen && props.children}
+      {/* <button onClick={() => setIsOpen(!isOpen)}>GPT Input</button> */}
+      {/* {isOpen && props.children} */}
+      {props.children}
     </div>
   )
 }
